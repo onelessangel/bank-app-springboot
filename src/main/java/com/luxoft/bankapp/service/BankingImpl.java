@@ -129,7 +129,6 @@ public class BankingImpl implements Banking {
         this.storage = storage;
     }
 
-    // TODO feed
     public void parseFeed(Map<String, String> map) {
         String name = map.get("NAME");
 
@@ -141,7 +140,7 @@ public class BankingImpl implements Banking {
 
         client.parseFeed(map);
 
-        Class type = map.get("type").equalsIgnoreCase("SAVING")?SavingAccount.class:CheckingAccount.class;
+        Class type = map.get("type").equalsIgnoreCase("SAVING") ? SavingAccount.class : CheckingAccount.class;
         Account account = client.getAccount(type);
 
         if (account == null) {

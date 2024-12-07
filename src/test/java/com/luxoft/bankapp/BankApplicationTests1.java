@@ -18,12 +18,14 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.lang.annotation.Annotation;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = BankApplication.class)
+@ActiveProfiles("dev")
 public class BankApplicationTests1 {
     private static final String[] CLIENT_NAMES =
             {"Jonny Bravo", "Adam Budzinski", "Anna Smith"};
@@ -203,5 +205,38 @@ public class BankApplicationTests1 {
 
         assertEquals(-500, account.getBalance());
         assertEquals(1500, account.getOverdraft());
+    }
+
+    @Test
+    public void initializationClient3() {
+        Client client = banking.getClient(CLIENT_NAMES[2]);
+        assertNotNull(client, "banking should have client with name: " + CLIENT_NAMES[2]);
+
+        assertEquals(2, client.getAccounts().size());
+    }
+
+    @Test
+    public void client3SavingAccount() {
+        Client client = banking.getClient(CLIENT_NAMES[2]);
+
+        Account account = client.getAccount(SavingAccount.class);
+
+        assertNotNull(account,
+                client.getName() + "should have saving account");
+
+        assertEquals(1000, account.getBalance());
+    }
+
+    @Test
+    public void client3CheckingAccount() {
+        Client client = banking.getClient(CLIENT_NAMES[2]);
+
+        CheckingAccount account = (CheckingAccount) client.getAccount(CheckingAccount.class);
+
+        assertNotNull(account,
+                client.getName() + "should have checking account");
+
+        assertEquals(3000, account.getBalance());
+        assertEquals(0, account.getOverdraft());
     }
 }
